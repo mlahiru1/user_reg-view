@@ -12,7 +12,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function dashboard()
+    public function index()
     {
         $users = User::all();
         return view('dashboard', ['users' => $users]);

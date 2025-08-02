@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/store', [UserController::class, 'store'])->name('user.store');
-Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 
 // // Route::resource()
 
