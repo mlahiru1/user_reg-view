@@ -19,11 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('/create', [UserController::class, 'create']);
- Route::Post('/store', [UserController::class, 'store'])->name('user.store');
+Route::post('/store', [UserController::class, 'store'])->name('user.store');
+Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+
 // // Route::resource()
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // Route::get('/greeting', function () {
 //     return 'Hello World';
