@@ -41,9 +41,11 @@ class UserController extends Controller
             ]);
 
             $user_data = User::create($data);
-            return view('dashboard');
+
+            // return redirect('/dashboard');
+            return response()->json(['message'=> $user_data->full_name . '  created user sucessfully'],200);
         } catch (\Throwable $th) {
-            dd($th);
+            return response()->json(['message'=>  $th->getMessage()],500);
         }
     }
 

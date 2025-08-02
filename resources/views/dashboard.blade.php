@@ -79,7 +79,7 @@
             </tr>
         </thead>
 
-        @foreach($users as $user)
+        @foreach ($users as $user)
             <tr>
                 <td>{{ $user->id }}</td>
                 <td>{{ $user->email }}</td>
@@ -93,6 +93,8 @@
     </table>
 
 </x-app-layout>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $('#userCreateBtn').on('click', function() {
@@ -100,10 +102,30 @@
         });
     });
 
-    function submitBtn() {
-        alert("Successfully registered");
-    }
+    $('#userForm').submit(function(e) {
+        e.preventDefault();
 
+        var url = $(this).attr("action");
+        let formData = new FormData(this);
+        console.log(url, formData);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: (response) => {
+               alert(response.message);
+            },
+             error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr);
+
+                  alert(xhr.responseJSON.message);
+                }
+        });
+
+    });
     var pass = document.getElementById("password");
 
     if (pass.value.length >= 8) {
