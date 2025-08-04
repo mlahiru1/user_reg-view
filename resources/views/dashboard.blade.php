@@ -25,8 +25,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id='userForm' method="POST" action='{{ route('user.store') }}'>
+                    <form id='userForm' method="POST" action='{{ route('user.store') }}' enctype="multipart/form-data"
+                        class="p-4 border rounded">
                         @csrf
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Upload Picture</label>
+                            <input type="file" class="form-control" id="image" name="image"
+                                onchange="previewImage(event)">
+                            <img id="preview" src="#" alt="Preview" class="mt-3"
+                                style="max-width: 150px; display: none;">
+                        </div>
+
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email">
@@ -97,6 +106,7 @@
                 <td>{{ $user->initial_name }}</td>
                 <td>{{ $user->dob }}</td>
                 <td>{{ $user->age }}</td>
+                <td>{{ $user->image }}</td>
             </tr>
         @endforeach
 
@@ -155,7 +165,7 @@
             processData: false,
             success: (response) => {
                 alert(response.message);
-                location.reload();
+                // location.reload();
             },
             error: function(xhr) {
                 if (xhr.status === 422) {
@@ -165,7 +175,7 @@
                     });
                 } else {
                     alert('Something went wrong.');
-                    location.reload();
+                    // location.reload();
                 }
             }
         });
@@ -181,5 +191,15 @@
     } else {
         length.classList.remove("valid");
         length.classList.add("invalid");
+    }
+
+    function previewImage(event) {          //preview image
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        }
+        reader.readAsDataURL(event.target.files[0]);
     }
 </script>

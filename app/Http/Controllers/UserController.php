@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use function Laravel\Prompts\alert;
 
 class UserController extends Controller
@@ -37,18 +38,28 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'full_name' => 'required|string|max:255',
-            'dob' => 'required|date|before:today',
+            'dob' => [
+                'required',
+                'date',
+                'before:' . Carbon::now()->subYears(5)->format('m-d-Y'),
+            ],
+            'image' => 'required|nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
+
+        $path = null;
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images', '  ');
+        };
 
         $user = User::create([
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
             'full_name' => $validated['full_name'],
             'dob' => $validated['dob'],
+            'image' => $path,
         ]);
 
-;        return response()->json(['message' => 'User created successfully!']);
-
+        return response()->json(['message' => 'User created successfully!']);
     }
 
 
