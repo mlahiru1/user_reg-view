@@ -15,6 +15,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+
+        // dd($users);
         return view('dashboard', ['users' => $users]);
     }
 
@@ -38,23 +40,14 @@ class UserController extends Controller
             'dob' => 'required|date|before:today',
         ]);
 
-        $fullName = $validated['full_name'];
-        $parts = explode(' ', $fullName);
-        $initials = '';
-
-        foreach ($parts as $part) {
-            $initials .= strtoupper(substr($part, 0, 1)) . '.';
-        }
-
-        User::create([
+        $user = User::create([
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
-            'full_name' => $fullName,
-            'initial_name' => $initials,
+            'full_name' => $validated['full_name'],
             'dob' => $validated['dob'],
         ]);
 
-        return response()->json(['message' => 'User created successfully!']);
+;        return response()->json(['message' => 'User created successfully!']);
 
     }
 

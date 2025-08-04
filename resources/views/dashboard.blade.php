@@ -13,54 +13,53 @@
 
     </x-slot>
 
-    <form id='userForm' method="POST" action='{{ route('user.store') }}'>
-        @csrf
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="row g-3">
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email">
-                                <span class="text-danger error-text email_error"></span>
-                            </div>
 
-                            <div class="col-md-6">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password">
-                                <span class="text-danger error-text password_error"></span>
-                            </div>
-
-                            <div class="col-12">
-                                <label for="full_name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="full_name" name="full_name">
-                                <span class="text-danger error-text full_name_error"></span>
-                            </div>
-
-                            <div class="col-12">
-                                <label for="dob" class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control" id="dob" name="dob">
-                                <span class="text-danger error-text dob_error"></span>
-                            </div>
-
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" onclick="submitBtn()">Save changes</button>
-                    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body">
+                    <form id='userForm' method="POST" action='{{ route('user.store') }}'>
+                        @csrf
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email">
+                            <span class="text-danger error-text email_error"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <span class="text-danger error-text password_error"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="full_name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name">
+                            <span class="text-danger error-text full_name_error"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="dob" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="dob" name="dob">
+                            <span class="text-danger error-text dob_error"></span>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
     <!-- Modal -->
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0/dist/shoelace.js"></script>
@@ -156,7 +155,6 @@
             processData: false,
             success: (response) => {
                 alert(response.message);
-                $('#exampleModal').modal('hide');
                 location.reload();
             },
             error: function(xhr) {
@@ -167,9 +165,11 @@
                     });
                 } else {
                     alert('Something went wrong.');
+                    location.reload();
                 }
             }
         });
+        $('#exampleModal').modal('hide');
     });
 
 

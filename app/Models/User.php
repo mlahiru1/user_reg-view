@@ -38,6 +38,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $apends = [
+        'initial_name'
+    ];
     /**
      * Get the attributes that should be cast.
      *
@@ -56,11 +59,28 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($user) {
+
             if ($user->dob) {
                 $user->age = Carbon::parse($user->dob)->age;
             }
             if ($user->full_name) {
-                $user->initial_name = $user->full_name;
+
+                $parts = explode(' ', trim($user->full_name));
+                $initials = '';
+
+                if (count($parts) > 1) {
+                    $lastName = ucfirst(array_pop($parts));
+                    $initials = '';
+                    foreach ($parts as $part) {
+                        $initials .= strtoupper(substr($part, 0, 1)) . '.';
+                    }
+                    $initials = $initials . ' ' . $lastName;
+                }else{
+                    $firstInitial = ucfirst($parts[0]);
+                    $initials = $firstInitial;
+                }
+
+                $user->initial_name = $initials;
             }
         });
 
@@ -69,17 +89,5 @@ class User extends Authenticatable
                 $user->age = Carbon::parse($user->dob)->age;
             }
         });
-    }
-
-    public function getInitialNameAttribute()
-    {
-        $parts = explode(' ', $this->full_name);
-        $initials = '';
-
-        foreach ($parts as $part) {
-            $initials .= strtoupper(substr($part, 0, 1)) . '.';
-        }
-
-        return $initials;
     }
 }
