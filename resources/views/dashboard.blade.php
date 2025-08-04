@@ -28,22 +28,29 @@
                     <div class="modal-body">
                         <form class="row g-3">
                             <div class="col-md-6">
-                                <label for="inputEmail4" class="form-label">Email</label>
+                                <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email">
+                                <span class="text-danger error-text email_error"></span>
                             </div>
+
                             <div class="col-md-6">
-                                <label for="inputPassword4" class="form-label">Password</label>
+                                <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" name="password">
+                                <span class="text-danger error-text password_error"></span>
                             </div>
+
                             <div class="col-12">
-                                <label for="FullName" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="full_name" placeholder="Full Name"
-                                    name="full_name">
+                                <label for="full_name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name">
+                                <span class="text-danger error-text full_name_error"></span>
                             </div>
+
                             <div class="col-12">
                                 <label for="dob" class="form-label">Date of Birth</label>
                                 <input type="date" class="form-control" id="dob" name="dob">
+                                <span class="text-danger error-text dob_error"></span>
                             </div>
+
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -55,6 +62,10 @@
         </div>
     </form>
     <!-- Modal -->
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0/dist/shoelace.js"></script>
+
+
 
 
     <div class="py-12">
@@ -102,12 +113,40 @@
         });
     });
 
+    // $('#userForm').submit(function(e) {
+    //     e.preventDefault();
+
+    //     var url = $(this).attr("action");
+    //     let formData = new FormData(this);
+    //     console.log(url, formData);
+
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: url,
+    //         data: formData,
+    //         contentType: false,
+    //         processData: false,
+    //         success: (response) => {
+    //             alert(response.message);
+    //             $('#exampleModal').modal('hide');
+    //             location.reload();
+    //         },
+    //         error: function(xhr, ajaxOptions, thrownError) {
+    //             console.log(xhr);
+
+    //             alert(xhr.responseJSON.message);
+    //         }
+    //     });
+
+    // });
+
     $('#userForm').submit(function(e) {
         e.preventDefault();
-
         var url = $(this).attr("action");
         let formData = new FormData(this);
-        console.log(url, formData);
+
+        // Clear previous errors
+        $('.error-text').text('');
 
         $.ajax({
             type: 'POST',
@@ -116,16 +155,24 @@
             contentType: false,
             processData: false,
             success: (response) => {
-               alert(response.message);
+                alert(response.message);
+                $('#exampleModal').modal('hide');
+                location.reload();
             },
-             error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr);
-
-                  alert(xhr.responseJSON.message);
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        $('.' + key + '_error').text(value[0]);
+                    });
+                } else {
+                    alert('Something went wrong.');
                 }
+            }
         });
-
     });
+
+
     var pass = document.getElementById("password");
 
     if (pass.value.length >= 8) {

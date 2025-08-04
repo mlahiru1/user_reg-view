@@ -59,7 +59,7 @@ class User extends Authenticatable
             if ($user->dob) {
                 $user->age = Carbon::parse($user->dob)->age;
             }
-            if($user->full_name){
+            if ($user->full_name) {
                 $user->initial_name = $user->full_name;
             }
         });
@@ -69,5 +69,17 @@ class User extends Authenticatable
                 $user->age = Carbon::parse($user->dob)->age;
             }
         });
+    }
+
+    public function getInitialNameAttribute()
+    {
+        $parts = explode(' ', $this->full_name);
+        $initials = '';
+
+        foreach ($parts as $part) {
+            $initials .= strtoupper(substr($part, 0, 1)) . '.';
+        }
+
+        return $initials;
     }
 }

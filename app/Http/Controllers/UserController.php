@@ -31,23 +31,33 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        try {
-                // dd($request->all());
-            $data = $request->validate([
-                'full_name' => 'required',
-                'email' => 'required',
-                'password' => 'required',
-                'dob' => 'required|date',
-            ]);
+        $validated = $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'full_name' => 'required|string|max:255',
+            'dob' => 'required|date|before:today',
+        ]);
 
-            $user_data = User::create($data);
+        $fullName = $validated['full_name'];
+        $parts = explode(' ', $fullName);
+        $initials = '';
 
-            // return redirect('/dashboard');
-            return response()->json(['message'=> $user_data->full_name . '  created user sucessfully'],200);
-        } catch (\Throwable $th) {
-            return response()->json(['message'=>  $th->getMessage()],500);
+        foreach ($parts as $part) {
+            $initials .= strtoupper(substr($part, 0, 1)) . '.';
         }
+
+        User::create([
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'full_name' => $fullName,
+            'initial_name' => $initials,
+            'dob' => $validated['dob'],
+        ]);
+
+        return response()->json(['message' => 'User created successfully!']);
+
     }
+
 
 
 
