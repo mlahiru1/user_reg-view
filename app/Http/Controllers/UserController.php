@@ -48,7 +48,7 @@ class UserController extends Controller
 
         $path = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('images', '  ');
+            $path = $request->file('image')->store('images');
         };
 
         $user = User::create([
