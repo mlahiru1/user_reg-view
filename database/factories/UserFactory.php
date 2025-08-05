@@ -24,11 +24,24 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'email' => $this->faker->unique()->safeEmail(),
+            // Password encrypted, default 'password'
+            'password' => bcrypt('password'),
+
+            // full_name matches string max 255
+            'full_name' => $this->faker->full_name(),
+
+            // dob: date before today - 5 years
+            'dob' => $this->faker->dateTimeBetween('-80 years', '-5 years')->format('Y-m-d'),
+
+            // image: store image filename as a string placeholder
+            // Note: Factory can't generate actual image files,
+            // so just generate a fake filename here
+            'image' => $this->faker->randomElement([
+                'avatar1.jpg',
+                'avatar2.png',
+                'avatar3.jpeg'
+            ]),
         ];
     }
 
@@ -37,7 +50,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
